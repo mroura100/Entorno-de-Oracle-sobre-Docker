@@ -1,0 +1,85 @@
+Configuración de la conexión a la Oracle DB
+CONEXIÓN A LA DB
+Para poder configurar la conexión a la BBDD primero se deberá obtener la IP del contenedor de la Oracle DB empleando el comando docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' real-oracle-db.
+
+
+
+Esta será la IP que haya que configurar en WL para conectar a la BBDD.
+
+ 
+
+CONEXIÓN DESDE WL
+Para poder configurar la conexión a la BBDD deberemos ir base_domain >> Services >> Data Sources y pulsar sobre el botón de New:
+
+
+
+Y seleccionaremos la opción de Generic Data Source y en la siguiente vista pondremos la siguiente información del JDBC Data Source:
+
+
+
+Como se ve en la imagen, rellenaremos estos dos campos:
+
+   - Name: JDBC Oracle DB
+
+   - JNDI Name: jdbc/sysdba
+
+Y pulsaremos sobre el botón de Next. En la siguiente vista pondremos la información que se muestra a continuación:
+
+
+
+Seleccionaremos del desplegable:
+
+   - Database Driver: *Oracle’s Driver (Thin XA) for Application Continuity; Versions:Any
+
+Pulsaremos sobre el botón de Next. En la siguiente vista pondremos la información, teniendo en cuenta que no nos vamos a conectar al localhost (que sería la máquina del contenedor) sino la dirección IP que hemos extraido al comienzo de esta sección:
+
+
+
+La información a rellenar será:
+
+   - Database Name: ORCLCDB.localdomain
+
+   - Host Name: la dirección IP del contenedor no localhost
+
+   - Port: 1521
+
+   - Database User Name: dummy
+
+   - Password: dummy
+
+   - Confirm Password: dummy
+
+Pulsaremos sobre el botón de Next. En la siguiente vista deberemos validar los datos que hemos ido rellenando:
+
+
+
+La información deberá ser la siguiente:
+
+   - Driver Class Name: oracle.jdbc.xa.client.OracleXADataSource
+
+   - URL: jdbc:oracle:thin:@//172.17.0.3:1521/ORCLCDB.localdomain
+
+   - Database User Name: dummy
+
+   - Password: dummy
+
+   - Confirm Password: dummy
+
+A continuación podremos validar la conexión a la BBDD haciendo click sobre el botón Test connection si ha sido todo valido pulsaremos sobre Next sino habrá que repetir los pasos anteriores.
+
+
+
+Y finalizaremos el proceso de configuración haciendo en clic sobre el botón Finish.
+
+Para validar el correcto funcionamiento:
+Instalar el API de la clase anterior
+
+Dejar el WAR en $SH_FOLDER
+
+/home/dsebastm/docker/sharedFolder
+
+Que se corresponde con:
+
+/u01/oracle/shared_folder
+
+docker exec -it oracle-wl-new-env-shared-folder bash -c "ls /u01/oracle/shared_folder"
